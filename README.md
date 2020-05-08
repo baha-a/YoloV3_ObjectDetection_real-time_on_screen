@@ -5,8 +5,7 @@ Supervised by Dr.-Ing. Soner Emec
 Built by Cabbar Serif
 ```
 ### The Project on Youtube
-[![IMAGE ALT TEXT](https://github.com/JabSYsEmb/Objekt_erkennung/blob/master/data/images/Thumbnail.png)]
-(https://www.youtube.com/watch?v=P8Ia9LfaVEM&feature=youtu.be "YoloV3 Real-Time Object Detection on Screen")
+[![IMAGE ALT TEXT](https://github.com/JabSYsEmb/Objekt_erkennung/blob/master/data/images/Thumbnail.png)](https://www.youtube.com/watch?v=P8Ia9LfaVEM&feature=youtu.be "YoloV3 Real-Time Object Detection on Screen")
 ## Getting started
 
 #### Conda (Recommended)
