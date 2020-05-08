@@ -12,3 +12,4 @@ dependencies:
     - flask
     - seaborn
     - pillow
+    - pyautogui

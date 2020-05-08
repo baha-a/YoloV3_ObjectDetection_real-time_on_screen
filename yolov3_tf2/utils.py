@@ -125,18 +125,22 @@ def draw_outputs(img, outputs, class_names):
         x0, y0 = x1y1[0], x1y1[1]
        
         obj_color = tuple(color)       
+
         if(class_names[int(classes[i])] == "cup") or ( class_names[int(classes[i])] == "bottle" ):
+
             for t in np.linspace(0, 1, thickness):
                 x1y1[0], x1y1[1] = x1y1[0] - t, x1y1[1] - t
                 x2y2[0], x2y2[1] = x2y2[0] - t, x2y2[1] - t
-          
-            # coordinates of each object [y1 => y2 , x1 => x2]
+            # coordinates of each object [y1 --> y2 , x1 --> x2]
             coordinates[i] = [ x1y1[1], x2y2[1], x1y1[0], x2y2[0] ] 
             
             obj_color = tuple(color)
+
+            # pre-checking before entering an image in colour_checker to color the frame with colour of its obejct
+            # Entering an Image with 0 width or height (0xp * X) causes an error
+
             if(coordinates[i][0]>0 and coordinates[i][1]>0 and coordinates[i][2]>0 and coordinates[i][3]>0):
-               # obj_color = check_colour(img,coordinates[i])
-               obj_color = test(img,coordinates[i],tuple(color))
+               obj_color = Frame_coloring(img,coordinates[i],tuple(color))
             else:
                 obj_color = tuple(color)
 
@@ -144,20 +148,20 @@ def draw_outputs(img, outputs, class_names):
 
             confidence = '{:.2f}%'.format(objectness[i]*100)
 
-        if(class_names[int(classes[i])] == "cup"):
-            text = '{} {}'.format(("Tasse"), confidence)
-            text_size = draw.textsize(text, font=font)
+            if(class_names[int(classes[i])] == "cup"):
+                text = '{} {}'.format(("Tasse"), confidence)
+                text_size = draw.textsize(text, font=font)
 
-        elif(( class_names[int(classes[i])] == "bottle" )):
-            text = '{} {}'.format(("Flasche"), confidence)
-            text_size = draw.textsize(text, font=font)
-        else:
-            text = ""
-            text_size = draw.textsize(text, font=font)
+            elif(( class_names[int(classes[i])] == "bottle" )):
+                text = '{} {}'.format(("Flasche"), confidence)
+                text_size = draw.textsize(text, font=font)
+            else:
+                text = ""
+                text_size = draw.textsize(text, font=font)
 
-        draw.rectangle([x0, y0 - text_size[1], x0 + text_size[0], y0],
-                        fill="black")
-        draw.text((x0, y0 - text_size[1]), text, fill=obj_color,
+            draw.rectangle([x0, y0 - text_size[1], x0 + text_size[0], y0],
+                            fill="black")
+            draw.text((x0, y0 - text_size[1]), text, fill=obj_color,
                               font=font)
 
     rgb_img = img.convert('RGB')
@@ -188,15 +192,13 @@ def freeze_all(model, frozen=True):
     if isinstance(model, tf.keras.Model):
         for l in model.layers:
             freeze_all(l, frozen)
-
             
-def check_colour(img,coordinate):
+def check_colour(img,coordinate,color):
     
     coordinate = np.array((coordinate[0],coordinate[1],coordinate[2],coordinate[3])).astype(int)
     
     img = np.array(img)
     img = img[coordinate[0]:coordinate[1],coordinate[2]:coordinate[3]]
-    colour = None
     print(img.shape)
     
     hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
@@ -247,7 +249,7 @@ def check_colour(img,coordinate):
             x, y, w, h = cv2.boundingRect(contour)
             # img = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
             cv2.putText(img, "Rote Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0))
-            colour = "red"
+            color = "red"
 
     # Tracking blue
     (contours, hierarchy)=cv2.findContours(blue, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -259,7 +261,7 @@ def check_colour(img,coordinate):
             x, y, w, h = cv2.boundingRect(contour)
             # img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
             cv2.putText(img, "Blaue Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255))
-            colour = "blue"
+            color = "blue"
 
     # Tracking Green
     (contours, hierarchy)=cv2.findContours(green, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -271,41 +273,64 @@ def check_colour(img,coordinate):
             x, y, w, h = cv2.boundingRect(contour)
             # img = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
             cv2.putText(img, "Grune Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0))
-            colour = "green"
-            
-    # Tracking yellow
-    #(contours, hierarchy)=cv2.findContours(yellow, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    #for pic, contour in enumerate(contours):
-    #    area = cv2.contourArea(contour)
-    #    if(area > 300):
-    #        # x, y, w, h = cv2.boundingRect(contour)
-    #        # img = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    #        # cv2.putText(img, "Gelbe Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,0))
-    #        colour = "yellow"
+            color = "green"
 
-    return colour
+    return color
 
-def test(img,coordinate,color):
+def Frame_coloring(img,coordinate,color = "yellow"):
+
+    """
+    Docstring:
+
+    Frame_coloring(img,coordinate,color)
+
+    Find what is the color of the inputed Image
+
+    Parameters
+    ----------
+    img : ndarray
+        A non-zero size (nxm) Image it should {n !=0 and m !=0}
+    coordinate : one_row_array
+        (y1,y2,x1,x2) coordinate vector for each detected Object.
+    color : str, optional
+        Color of the object in case of the function fails in finding 
+        the color of the object.
+
+    Returns:
+    --------
+    out : str
+        It returns one of the basis colors (RGB) in case it has been detected
+        or returns the default color "Yellow" or whatever has been inputed.
     
+    Notes:
+    ------
+    If you input a vector as coordinate with y2 >> y1 or x2 >> x1 that will
+    causes a problem in resizing so you have to sure about correct order 
+    of the coordinates with  correct values.
+
+    """
+
     coordinate = np.array((coordinate[0],coordinate[1],coordinate[2],coordinate[3])).astype(int)
     
     img = np.array(img)
     img = img[coordinate[0]:coordinate[1],coordinate[2]:coordinate[3]]
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    print("========================")
-    print("\nr layer of the image = ",img[:,:,0].mean(), "\nmax vaule is equal to {}".format(img[:,:,0].max()))
-    print("\ng layer of the image = ",img[:,:,1].mean(), "\nmax vaule is equal to {}".format(img[:,:,1].max()))
-    print("\nb layer of the image = ",img[:,:,2].mean(), "\nmax vaule is equal to {}".format(img[:,:,2].max()))
-    print("========================")
     colour = color
+    
+    # Finding the mean of each Layers of the image R- G- and B-Layer
+    # Then comparing each mean with the other means after adding 20 to them
+    # And the mean itself should have a threshold bigger than 120.
+
+    #Red_Checking
     if(img[:,:,0].mean() > img[:,:,1].mean()+20):
         if(img[:,:,0].mean() > img[:,:,2].mean()+20):
             if(int(img[:,:,0].mean()) > 120):
                 colour = "red"
+    #Green_Checking
     elif(img[:,:,1].mean() > img[:,:,0].mean()+20):
         if(img[:,:,1].mean() > img[:,:,2].mean()+20):
             if(int(img[:,:,1].mean()) > 120):
                 colour = "green"
+    #Blue_Checking
     elif(img[:,:,2].mean() > img[:,:,0].mean()+20):
         if(img[:,:,2].mean() > img[:,:,1].mean()+20):
             if(int(img[:,:,2].mean()) > 120):

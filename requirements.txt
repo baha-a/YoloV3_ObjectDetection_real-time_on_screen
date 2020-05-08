@@ -6,3 +6,4 @@ tqdm
 flask
 seaborn
 pillow
+pyautogui
