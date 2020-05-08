@@ -45,13 +45,3 @@ wget https://pjreddie.com/media/files/yolov3-tiny.weights -O weights/yolov3-tiny
 ```
 For Windows:
 You can download the yolov3 weights by clicking [here](https://pjreddie.com/media/files/yolov3.weights) and yolov3-tiny [here](https://pjreddie.com/media/files/yolov3-tiny.weights) then save them to the weights folder.
-
-### Using Custom trained weights
-<strong> Learn How To Train Custom YOLOV3 Weights Here: https://www.youtube.com/watch?v=zJDUhGL26iU </strong>
-
-Add your custom weights file to weights folder and your custom .names file into data/labels folder.
-  
-### Saving your yolov3 weights as a TensorFlow model.
-Load the weights using `load_weights.py` script. This will convert the yolov3 weights into TensorFlow .ckpt model files!
-
-```
