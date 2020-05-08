@@ -4,6 +4,7 @@ This Project has beeen supported by the Turkish-German Univeristy
 Supervised by Dr.-Ing. Soner Emec
 Built by Cabbar Serif
 ```
+[![IMAGE ALT TEXT](https://github.com/JabSYsEmb/Objekt_erkennung/blob/master/data/images/test.jpg)]
 (https://youtu.be/P8Ia9LfaVEM "YoloV3 Real-Time Object Detection on Screen")
 ## Getting started
 
