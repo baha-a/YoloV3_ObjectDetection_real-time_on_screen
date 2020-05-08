@@ -132,14 +132,16 @@ def draw_outputs(img, outputs, class_names):
           
             # coordinates of each object [y1 => y2 , x1 => x2]
             coordinates[i] = [ x1y1[1], x2y2[1], x1y1[0], x2y2[0] ] 
-
+            
             obj_color = tuple(color)
             if(coordinates[i][0]>0 and coordinates[i][1]>0 and coordinates[i][2]>0 and coordinates[i][3]>0):
-                obj_color = check_colour(img,coordinates[i])
+               # obj_color = check_colour(img,coordinates[i])
+               obj_color = test(img,coordinates[i],tuple(color))
             else:
                 obj_color = tuple(color)
 
             draw.rectangle([x1y1[0], x1y1[1], x2y2[0], x2y2[1]], outline=obj_color,width=10)
+
             confidence = '{:.2f}%'.format(objectness[i]*100)
 
         if(class_names[int(classes[i])] == "cup"):
@@ -214,21 +216,16 @@ def check_colour(img,coordinate):
     lower_green = np.array([65,60,60])
     upper_green = np.array([80,255,255])
         
-    # yellow color
-
-    yellow_lower = np.array([22,60,200],np.uint8)
-    yellow_upper = np.array([60,255,255],np.uint8)
 
     # all color together
 
     red = cv2.inRange(hsv, red_lower, red_upper)
     blue = cv2.inRange(hsv, blue_lower, blue_upper)
     green = cv2.inRange(hsv, lower_green, upper_green)
-    yellow = cv2.inRange(hsv, yellow_lower, yellow_upper)
 
     # Morphological Transform, Dilation
 
-    kernal = np.ones((5, 5), "uint8")
+    kernal = np.ones((3, 3), "uint8")
 
     red = cv2.dilate(red, kernal)
     res_red = cv2.bitwise_and(img, img, mask = red)
@@ -239,44 +236,41 @@ def check_colour(img,coordinate):
     green = cv2.dilate(green,kernal)
     res_green = cv2.bitwise_and(img,img,mask = green)
         
-        
-    yellow = cv2.dilate(yellow, kernal)
-    res_yellow = cv2.bitwise_and(img, img, mask = yellow)
 
     # Tracking red
     (contours, hierarchy)=cv2.findContours(red, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for pic, contour in enumerate(contours):
         area = cv2.contourArea(contour)
-        if (colour == "red"):
-           break
+        #if (colour == "red"):
+        #   break
         if(area > 300):
-            # x, y, w, h = cv2.boundingRect(contour)
+            x, y, w, h = cv2.boundingRect(contour)
             # img = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-            # cv2.putText(img, "Rote Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0))
+            cv2.putText(img, "Rote Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0))
             colour = "red"
 
     # Tracking blue
     (contours, hierarchy)=cv2.findContours(blue, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for pic, contour in enumerate(contours):
         area = cv2.contourArea(contour)
-        if (colour == "blue"):
-           break 
+        #if (colour == "blue"):
+        #   break 
         if(area > 300):
-            # x, y, w, h = cv2.boundingRect(contour)
+            x, y, w, h = cv2.boundingRect(contour)
             # img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-            # cv2.putText(img, "Blaue Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255))
+            cv2.putText(img, "Blaue Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255))
             colour = "blue"
 
     # Tracking Green
     (contours, hierarchy)=cv2.findContours(green, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for pic, contour in enumerate(contours):
         area = cv2.contourArea(contour)
-        if (colour == "green"):
-           break
+        #if (colour == "green"):
+        #   break
         if(area > 300):
-            # x, y, w, h = cv2.boundingRect(contour)
+            x, y, w, h = cv2.boundingRect(contour)
             # img = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-            # cv2.putText(img, "Grune Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0))
+            cv2.putText(img, "Grune Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0))
             colour = "green"
             
     # Tracking yellow
@@ -289,4 +283,32 @@ def check_colour(img,coordinate):
     #        # cv2.putText(img, "Gelbe Farbe", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,0))
     #        colour = "yellow"
 
+    return colour
+
+def test(img,coordinate,color):
+    
+    coordinate = np.array((coordinate[0],coordinate[1],coordinate[2],coordinate[3])).astype(int)
+    
+    img = np.array(img)
+    img = img[coordinate[0]:coordinate[1],coordinate[2]:coordinate[3]]
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    print("========================")
+    print("\nr layer of the image = ",img[:,:,0].mean(), "\nmax vaule is equal to {}".format(img[:,:,0].max()))
+    print("\ng layer of the image = ",img[:,:,1].mean(), "\nmax vaule is equal to {}".format(img[:,:,1].max()))
+    print("\nb layer of the image = ",img[:,:,2].mean(), "\nmax vaule is equal to {}".format(img[:,:,2].max()))
+    print("========================")
+    colour = color
+    if(img[:,:,0].mean() > img[:,:,1].mean()+20):
+        if(img[:,:,0].mean() > img[:,:,2].mean()+20):
+            if(int(img[:,:,0].mean()) > 120):
+                colour = "red"
+    elif(img[:,:,1].mean() > img[:,:,0].mean()+20):
+        if(img[:,:,1].mean() > img[:,:,2].mean()+20):
+            if(int(img[:,:,1].mean()) > 120):
+                colour = "green"
+    elif(img[:,:,2].mean() > img[:,:,0].mean()+20):
+        if(img[:,:,2].mean() > img[:,:,1].mean()+20):
+            if(int(img[:,:,2].mean()) > 120):
+                colour = "blue"
+    
     return colour

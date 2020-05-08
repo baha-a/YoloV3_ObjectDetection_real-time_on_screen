@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\data",
+    "\\data\\labels",
+    "\\yolov3_tf2"
   ],
+  "SelectedNode": "\\yolov3_tf2\\utils.py",
   "PreviewInSolutionExplorer": false
 }

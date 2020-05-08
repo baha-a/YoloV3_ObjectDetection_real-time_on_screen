@@ -137,40 +137,40 @@ def main(_argv):
 
     times = []
 
-    try:
-        vid = cv2.VideoCapture(int(pyautogui.screenshot())) #instead of inputing a camera we have input the screen of the pc.
-    except:
-        vid = cv2.VideoCapture(FLAGS.video)
+    #try:
+    #    vid = cv2.VideoCapture(int(pyautogui.screenshot())) #instead of inputing a camera we have input the screen of the pc.
+    #except:
+    #    vid = cv2.VideoCapture(FLAGS.video)
 
-    out = None
+    #out = None
 
-    if FLAGS.output:
-        # by default VideoCapture returns float instead of int
-        width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = int(vid.get(cv2.CAP_PROP_FPS))
-        codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
-        out = cv2.VideoWriter(FLAGS.output, codec, fps, (width, height))
+    #if FLAGS.output:
+    #    # by default VideoCapture returns float instead of int
+    #    width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
+    #    height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    #    fps = int(vid.get(cv2.CAP_PROP_FPS))
+    #    codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
+    #    out = cv2.VideoWriter(FLAGS.output, codec, fps, (width, height))
     fps = 0.0
-    count = 0
+    #count = 0
 
     while True:
        
        # capturing a part of the screen with resulation (1200,1200)px 
-        img = ImageGrab.grab(bbox=(50,50,900,900),all_screens=True) # x, y, w, h
+        img = ImageGrab.grab(bbox=(50,50,950,950),all_screens=True) # x, y, w, h
         img = np.array(img)
         _ = True
 
         
         
-        if img is None:
-            logging.warning("Empty Frame")
-            time.sleep(0.1)
-            count+=1
-            if count < 3:
-                continue
-            else: 
-                break
+        #if img is None:
+        #    logging.warning("Empty Frame")
+        #    time.sleep(0.1)
+        #    count+=1
+        #    if count < 3:
+        #        continue
+        #    else: 
+        #        break
 
         img_in = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img_in = tf.expand_dims(img_in, 0)
@@ -182,22 +182,20 @@ def main(_argv):
 
         img, objekt_dim, marra = draw_outputs(img, (boxes, scores, classes, nums), class_names)
         
-        for km_marra in range(0,marra):
+        #for km_marra in range(0,marra):
             
-            objekt_coordinate = np.array((objekt_dim[km_marra][0],objekt_dim[km_marra][1],objekt_dim[km_marra][2],objekt_dim[km_marra][3]))
-            objekt_coordinate = objekt_coordinate.astype(int)
+        #    objekt_coordinate = np.array((objekt_dim[km_marra][0],objekt_dim[km_marra][1],objekt_dim[km_marra][2],objekt_dim[km_marra][3]))
+        #    objekt_coordinate = objekt_coordinate.astype(int)
             
-
-        img = cv2.putText(img, "Das Code wird von ersten Gruppen erstellt", (0, 30),
-                          cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 0, 0), 2)
-
+        img = cv2.putText(img, "Das Code wird von ersten Gruppe_I erstellt "+str(int(fps))+" (fps)", (0, 30),
+                          cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 0, 0), 1)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 
         
-        if FLAGS.output:
-            out.write(img)
-        cv2.imshow("output",img)
+        #if FLAGS.output:
+        #    out.write(img)
+        cv2.imshow("Gruppe_I",img)
         if cv2.waitKey(1) == ord('q'):
          break
 
