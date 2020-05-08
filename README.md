@@ -1,8 +1,8 @@
 # YoloV3 Real-Time Object Detection on Screen With GradScreen and Tensorflow Libraries
 
-## This Project has beeen supported by the Turkish-German Univeristy
-## Supervised by Dr.-Ing. Soner Emec
-## Built by Cabbar Serif
+#### This Project has beeen supported by the Turkish-German Univeristy
+#### Supervised by Dr.-Ing. Soner Emec
+#### Built by Cabbar Serif
 
 Yolov3 is an algorithm that uses deep convolutional neural networks to perform object detection. This repository implements Yolov3 using TensorFlow 2.0.
 
