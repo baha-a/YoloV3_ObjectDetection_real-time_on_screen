@@ -114,7 +114,7 @@ def draw_outputs(img, outputs, class_names):
     font = ImageFont.truetype(font='./data/fonts/futur.ttf',
                               size=(img.size[0] + img.size[1]) // 100)
 
-    # creating an empty array for saving coordinates of objects for the colour classification process
+    # creating an empty array for saving coordinates of objects for the colour detection process
     coordinates = np.zeros((nums,4))
     
     for i in range(nums):
