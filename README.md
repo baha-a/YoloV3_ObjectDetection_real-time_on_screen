@@ -1,6 +1,6 @@
 # YoloV3 Real-Time Object Detection on Screen With GradScreen and Tensorflow Libraries
 ```bash
-This Project has beeen supported by the Turkish-German Univeristy
+This Project has been supported by the Turkish-German Univeristy
 Supervised by Dr.-Ing. Soner Emec
 Built by Cabbar Serif, Ibrahim Nemmura, Ovais Fakhani, Hasan Güzelmansur
 ```
