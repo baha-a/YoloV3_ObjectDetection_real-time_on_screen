@@ -10,10 +10,6 @@ Built by Cabbar Serif, Ibrahim Nemmura, Ovais Fakhani, Hasan Güzelmansur
 
 #### Conda (Recommended)
 ```bash
-# Tensorflow CPU
-conda env create -f conda-cpu.yml
-conda activate yolov3-cpu
-
 # Tensorflow GPU
 conda env create -f conda-gpu.yml
 conda activate yolov3-gpu
