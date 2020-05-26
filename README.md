@@ -16,8 +16,6 @@ conda activate yolov3-gpu
 ```
 #### Pip
 ```bash
-# TensorFlow CPU
-pip install -r requirements.txt
 
 # TensorFlow GPU
 pip install -r requirements-gpu.txt
