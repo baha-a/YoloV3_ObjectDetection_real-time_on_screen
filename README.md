@@ -11,8 +11,8 @@ Built by Cabbar Serif, Ibrahim Nemmura, Ovais Fakhani, Hasan Güzelmansur
 #### Conda (Recommended)
 ```bash
 # Tensorflow GPU
-conda env create -f conda-gpu.yml
-conda activate yolov3-gpu
+conda env create -f erste-gruppe.yml
+conda activate erste-gruppe
 ```
 #### Pip
 ```bash
