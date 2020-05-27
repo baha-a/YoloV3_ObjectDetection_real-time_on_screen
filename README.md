@@ -1,4 +1,4 @@
-# YoloV3 Real-Time Object Detection on Screen With GradScreen and Tensorflow Libraries
+# YoloV3 Real-Time Object Detection on Screen With GradScreen Library and Tensorflow
 ```bash
 This Project has been supported by the Turkish-German Univeristy
 Supervised by Dr.-Ing. Soner Emec
